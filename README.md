@@ -14,3 +14,4 @@ Examples:
     vtpy list allplans -- list all plans, even when no locations offer them right now
     vypy list locations -- list datacenter/locations
     vtpy kill <SUBID> [<SUBID>] -- DESTROY one or more servers (THIS IS DESTRUCTIVE, THERE IS NO 'CONFIRM' STEP, BE CAREFUL)
+    vtpy status <SUBID> [<SUBID>] -- get detailed status for one or more servers
