@@ -53,14 +53,25 @@ def printplans():
         print('Price per month: {}'.format(list[i]['price_per_month']))
         print('Plan type: {}'.format(list[i]['plan_type']))
         print('Locations: ',end='')
-        locations=list[i]['available_locations']
-#        if locations == []:
         if (len(list[i]['available_locations']) == 0):
             print('NONE')
         else:
-            print(locations)
+            regions=regionlist()
+            for j in list[i]['available_locations']:
+                dc=str(j)
+                print('{}[{}] '.format(regions[dc]['name'],dc),end='')
+            print()
         print()
 
+def regionlist():
+    url = 'https://api.vultr.com/v1/regions/list'
+    r = requests.get(url)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url,headers)
+        r.raise_for_status()
+    return r.json()
 
 def kill(target):
     list = serverlist()
