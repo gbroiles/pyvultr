@@ -7,8 +7,8 @@ import pprint
 def create_parse():
     parser = argparse.ArgumentParser(
         description='vultr control panel')
-    parser.add_argument('list', help='list servers')
-    parser.add_argument('kill', help='destroy server(s)' nargs='+')
+    parser.add_argumetn('command', help='action to perform')
+    parser.add_argument('target', help='server(s)' nargs='*')
     return parser
 
 def serverlist(apikey):
@@ -25,12 +25,22 @@ def serverlist(apikey):
         print('RAM: {}'.format(list[i]['ram']))
         print('Main IP: {}'.format(list[i]['main_ip']))
         print('\n')
+    return list
 
 def kill(apikey,target):
-    url = 'https://api.vultr.com/v1/server/destroy'
-    headers = {'API-Key': apikey}
-    r = requests.post(url, headers=headers, data={'SUBID':target})
-    print(r.status_code)
+    list = serverlist(apikey)
+    for i in target:
+        if list[i]['SuBID'] == i:
+            url = 'https://api.vultr.com/v1/server/destroy'
+            headers = {'API-Key': apikey}
+            r = requests.post(url, headers=headers, data={'SUBID':i})
+            status=r.status_code
+            if (status == 200):
+                print('{} destroyed.'.format(i))
+            else:
+                print('Status returned: {}'.status)
+        else:
+            print('Server {} not found'.format(i))
 
 def start():
     parser = create_parse()
@@ -40,12 +50,12 @@ def start():
     except KeyError:
         print('Must set VULTRAPI key enviroment variable.')
         sys.exit(1)
-    if (
+    command=args[command]
+    target=args[target]
     if (command == 'sl' or command == 'serverlist'):
         serverlist(apikey)
     elif (command == 'kill'):
         kill(apikey,target)
-
     else:
         print('Command not recognized.')
 
