@@ -20,7 +20,10 @@ def serverlist(apikey):
         print(status)
         print(url,headers)
         r.raise_for_status()
-    list = r.json()
+    return r.json()
+
+def printserverlist(apikey):
+    list = serverlist(apikey)
     for i in list.keys():
         print('ID: {}'.format(list[i]['SUBID']))
         print('Name: {}'.format(list[i]['label']))
@@ -28,26 +31,28 @@ def serverlist(apikey):
         print('Datacenter: {} ({})'.format(list[i]['DCID'],list[i]['location']))
         print('OS: {}'.format(list[i]['os']))
         print('RAM: {}'.format(list[i]['ram']))
-        print('Main IP: {}'.format(list[i]['main_ip']))
-        print('\n')
-    return list
+        print('Main IP: {}\n'.format(list[i]['main_ip']))
 
 def kill(apikey,target):
     list = serverlist(apikey)
+    count = 0
     for i in target:
-        if list[i]['SuBID'] == i:
+        try:
+            x = list[i]['SUBID'] 
             url = 'https://api.vultr.com/v1/server/destroy'
             headers = {'API-Key': apikey}
             r = requests.post(url, headers=headers, data={'SUBID':i})
             status=r.status_code
             if (status == 200):
                 print('{} destroyed.'.format(i))
+                count = count + 1
             else:
                 print('Status returned: {}'.format(status))
                 print(url,headers,data)
                 r.raise_for_status()
-        else:
-            print('Server {} not found'.format(i))
+        except KeyError:
+            next
+    print('{} server(s) destroyed.'.format(count))
 
 def start():
     parser = create_parse()
@@ -59,8 +64,8 @@ def start():
         sys.exit(1)
     command=args.command
     target=args.target
-    if (command == 'sl' or command == 'serverlist'):
-        serverlist(apikey)
+    if (command == 'sl' or command == 'serverlist' or command == 'ls'):
+        printserverlist(apikey)
     elif (command == 'kill'):
         kill(apikey,target)
     else:
