@@ -14,8 +14,7 @@ def create_parse():
 
 def serverlist():
     url = 'https://api.vultr.com/v1/server/list'
-    headers = {'API-Key': apikey}
-    r = requests.get(url, headers=headers)
+    r = s.get(url)
     status = r.status_code
     if (status != 200):
         print(status)
@@ -38,7 +37,7 @@ def printstatus(statuswanted):
 
 def planlist():
     url = 'https://api.vultr.com/v1/plans/list'
-    r = requests.get(url)
+    r = s.get(url)
     status = r.status_code
     if (status != 200):
         print(status)
@@ -82,7 +81,7 @@ def printplans():
 
 def regionlist():
     url = 'https://api.vultr.com/v1/regions/list'
-    r = requests.get(url)
+    r = s.get(url)
     status = r.status_code
     if (status != 200):
         print(url)
@@ -97,23 +96,20 @@ def kill(target):
         try:
             x = list[i]['SUBID'] 
             url = 'https://api.vultr.com/v1/server/destroy'
-            headers = {'API-Key': apikey}
-            r = requests.post(url, headers=headers, data={'SUBID':x})
+            r = s.post(url, data={'SUBID':x})
             status=r.status_code
             if (status == 200):
                 print('{} destroyed.'.format(i))
                 count = count + 1
             else:
                 print('Status returned: {}'.format(status))
-                print(url,headers,'SUBID:',x)
+                print(url,'SUBID:',x)
                 r.raise_for_status()
         except KeyError:
             next
     print('{} server(s) destroyed.'.format(count))
 
 def status(target):
-    s = requests.Session()
-    s.headers.update({'API-Key': apikey})
     for i in target:
         url = 'https://api.vultr.com/v1/server/list'
         payload = ({'SUBID': i})
@@ -132,7 +128,6 @@ def create(target):
     return
 
 def start():
-    global apikey
     parser = create_parse()
     args = parser.parse_args()
     try:
@@ -161,6 +156,16 @@ def start():
         create(args.target)
     else:
         print('Command {} not recognized.'.format(command))
+        sys.exit(1)
+
+try:
+    apikey = os.environ["VULTRAPI"]
+except KeyError:
+    print('Must set VULTRAPI key enviroment variable.')
+    sys.exit(1)
+
+s = requests.Session()
+s.headers.update({'API-Key': apikey})
 
 if __name__ == '__main__':
     start()
