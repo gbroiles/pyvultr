@@ -24,16 +24,18 @@ def serverlist():
         r.raise_for_status()
     return r.json()
 
-def printserverlist():
+def printstatus(statuswanted):
     list = serverlist()
     for i in list.keys():
-        print('ID: {}'.format(list[i]['SUBID']))
-        print('Name: {}'.format(list[i]['label']))
-        print('Start: {}'.format(list[i]['date_created']))
-        print('Datacenter: {} ({})'.format(list[i]['DCID'],list[i]['location']))
-        print('OS: {}'.format(list[i]['os']))
-        print('RAM: {}'.format(list[i]['ram']))
-        print('Main IP: {}\n'.format(list[i]['main_ip']))
+        if (statuswanted == 'ALL' or list[i]['status'] == statuswanted):
+            print('ID: {}'.format(list[i]['SUBID']))
+            print('Name: {}'.format(list[i]['label']))
+            print('Start: {}'.format(list[i]['date_created']))
+            print('Status: {}'.format(list[i]['status']))
+            print('Datacenter: {} ({})'.format(list[i]['DCID'],list[i]['location']))
+            print('OS: {}'.format(list[i]['os']))
+            print('RAM: {}'.format(list[i]['ram']))
+            print('Main IP: {}\n'.format(list[i]['main_ip']))
 
 def planlist():
     url = 'https://api.vultr.com/v1/plans/list'
@@ -45,7 +47,7 @@ def planlist():
         r.raise_for_status()
     return r.json()
 
-def printplans():
+def printallplans():
     list=planlist()
     for i in list:
         print('ID: {}'.format(list[i]['VPSPLANID']))
@@ -63,13 +65,29 @@ def printplans():
             print()
         print()
 
+def printplans():
+    list=planlist()
+    for i in list:
+        if (len(list[i]['available_locations']) > 0):
+            print('ID: {}'.format(list[i]['VPSPLANID']))
+            print('Name: {}'.format(list[i]['name']))
+            print('Price per month: {}'.format(list[i]['price_per_month']))
+            print('Plan type: {}'.format(list[i]['plan_type']))
+            print('Locations: ',end='')
+            regions=regionlist()
+            for j in list[i]['available_locations']:
+                dc=str(j)
+                print('{}[{}] '.format(regions[dc]['name'],dc),end='')
+            print()
+        print()
+
 def regionlist():
     url = 'https://api.vultr.com/v1/regions/list'
     r = requests.get(url)
     status = r.status_code
     if (status != 200):
+        print(url)
         print(status)
-        print(url,headers)
         r.raise_for_status()
     return r.json()
 
@@ -109,9 +127,13 @@ def start():
         target=args.target[0]
         print(target)
         if (target == 'server' or target == 'servers'):
-            printserverlist()
+            printstatus('ALL')
         if (target == 'plans'):
             printplans()
+        if (target == 'allplans'):
+            printallplans()
+        if (target == 'active' or target == 'pending' or target == 'suspended' or target == 'closed'):
+            printstatus(target)
     elif (command == 'kill'):
         kill(target)
     else:
