@@ -7,8 +7,8 @@ import pprint
 def create_parse():
     parser = argparse.ArgumentParser(
         description='vultr control panel')
-    parser.add_argumetn('command', help='action to perform')
-    parser.add_argument('target', help='server(s)' nargs='*')
+    parser.add_argument('command', help='action to perform')
+    parser.add_argument('target', help='server(s)', nargs='*')
     return parser
 
 def serverlist(apikey):
@@ -38,7 +38,7 @@ def kill(apikey,target):
             if (status == 200):
                 print('{} destroyed.'.format(i))
             else:
-                print('Status returned: {}'.status)
+                print('Status returned: {}'.format(status))
         else:
             print('Server {} not found'.format(i))
 
@@ -50,8 +50,8 @@ def start():
     except KeyError:
         print('Must set VULTRAPI key enviroment variable.')
         sys.exit(1)
-    command=args[command]
-    target=args[target]
+    command=args.command
+    target=args.target
     if (command == 'sl' or command == 'serverlist'):
         serverlist(apikey)
     elif (command == 'kill'):
