@@ -2,7 +2,6 @@
 import requests
 import argparse
 import os,sys
-import pprint
 
 apikey = ''
 
@@ -112,6 +111,26 @@ def kill(target):
             next
     print('{} server(s) destroyed.'.format(count))
 
+def status(target):
+    s = requests.Session()
+    s.headers.update({'API-Key': apikey})
+    for i in target:
+        url = 'https://api.vultr.com/v1/server/list'
+        payload = ({'SUBID': i})
+        r = s.get(url, params=payload)
+        status = r.status_code
+        if (status != 200):
+            print(status)
+            print(url,headers)
+            r.raise_for_status()
+        x = r.json()
+        for j in x:
+            print(j,': ',x[j])
+        print()
+
+def create(target):
+    return
+
 def start():
     global apikey
     parser = create_parse()
@@ -122,10 +141,10 @@ def start():
         print('Must set VULTRAPI key enviroment variable.')
         sys.exit(1)
     command=args.command
-    print(command)
+#    print(command)
     if command == 'list':
         target=args.target[0]
-        print(target)
+#        print(target)
         if (target == 'server' or target == 'servers'):
             printstatus('ALL')
         if (target == 'plans'):
@@ -134,8 +153,12 @@ def start():
             printallplans()
         if (target == 'active' or target == 'pending' or target == 'suspended' or target == 'closed'):
             printstatus(target)
+    elif (command == 'status'):
+        status(args.target)
     elif (command == 'kill'):
-        kill(target)
+        kill(args.target)
+    elif (command == 'create'):
+        create(args.target)
     else:
         print('Command {} not recognized.'.format(command))
 
