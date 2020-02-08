@@ -15,6 +15,11 @@ def serverlist(apikey):
     url = 'https://api.vultr.com/v1/server/list'
     headers = {'API-Key': apikey}
     r = requests.get(url, headers=headers)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url,headers)
+        r.raise_for_status()
     list = r.json()
     for i in list.keys():
         print('ID: {}'.format(list[i]['SUBID']))
@@ -39,6 +44,8 @@ def kill(apikey,target):
                 print('{} destroyed.'.format(i))
             else:
                 print('Status returned: {}'.format(status))
+                print(url,headers,data)
+                r.raise_for_status()
         else:
             print('Server {} not found'.format(i))
 
