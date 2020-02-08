@@ -41,14 +41,14 @@ def kill(apikey,target):
             x = list[i]['SUBID'] 
             url = 'https://api.vultr.com/v1/server/destroy'
             headers = {'API-Key': apikey}
-            r = requests.post(url, headers=headers, data={'SUBID':i})
+            r = requests.post(url, headers=headers, data={'SUBID':x})
             status=r.status_code
             if (status == 200):
                 print('{} destroyed.'.format(i))
                 count = count + 1
             else:
                 print('Status returned: {}'.format(status))
-                print(url,headers,data)
+                print(url,headers,'SUBID:',x)
                 r.raise_for_status()
         except KeyError:
             next
