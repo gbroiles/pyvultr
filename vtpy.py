@@ -125,7 +125,40 @@ def status(target):
         print()
 
 def create(target):
+    url = 'https://api.vultr.com/v1/server/create'
+    datacenter = target[0]
+    vpsplan = target[1]
+    osid = target[2]
+    pvtnet = target[3] == '1'
+    sshkey = target[4]
+    firewall = target[5]
+    hostname = target[6]
+    tags = target[7:]
+
+    print('Requested:\nDatacenter: {}\nPlan: {}\nOS: {}'.format(datacenter,vpsplan,osid))
+    print('PrivateNetworking: {}\nSSHkey: {}\nFirewall: {}'.format(pvtnet,sshkey,firewall))
+    print('Hostname: {}\nTags: {}'.format(hostname,tags))
     return
+
+def copy(target):
+    for i in target:
+        url = 'https://api.vultr.com/v1/server/list'
+        payload = ({'SUBID': i})
+        r = s.get(url, params=payload)
+        status = r.status_code
+        if (status != 200):
+            print(status)
+            print(url,headers)
+            r.raise_for_status()
+        existing = r.json()
+        datacenter = existing['DCID']
+        vpsplan = existing['VPSPLANID']
+        osid = existing['OSID']
+        pvtnet = 
+        sshkey = 
+        firewall = existing['FIREWALLGROUPID']
+        tags = existing['tag']
+
 
 def start():
     parser = create_parse()
@@ -148,6 +181,8 @@ def start():
             printallplans()
         if (target == 'active' or target == 'pending' or target == 'suspended' or target == 'closed'):
             printstatus(target)
+    elif (command == 'ls'):
+        printstatus('ALL')
     elif (command == 'status'):
         status(args.target)
     elif (command == 'kill'):
