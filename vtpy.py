@@ -18,7 +18,7 @@ def serverlist():
     status = r.status_code
     if (status != 200):
         print(status)
-        print(url,headers)
+        print(url)
         r.raise_for_status()
     return r.json()
 
@@ -41,7 +41,7 @@ def planlist():
     status = r.status_code
     if (status != 200):
         print(status)
-        print(url,headers)
+        print(url)
         r.raise_for_status()
     return r.json()
 
@@ -148,14 +148,14 @@ def copy(target):
         status = r.status_code
         if (status != 200):
             print(status)
-            print(url,headers)
+            print(url)
             r.raise_for_status()
         existing = r.json()
         datacenter = existing['DCID']
         vpsplan = existing['VPSPLANID']
         osid = existing['OSID']
-        pvtnet = 
-        sshkey = 
+#        pvtnet = 
+#        sshkey = 
         firewall = existing['FIREWALLGROUPID']
         tags = existing['tag']
 
@@ -171,11 +171,6 @@ def printsshlist():
 def start():
     parser = create_parse()
     args = parser.parse_args()
-    try:
-        apikey = os.environ["VULTRAPI"]
-    except KeyError:
-        print('Must set VULTRAPI key enviroment variable.')
-        sys.exit(1)
     command=args.command
 #    print(command)
     if command == 'list':
@@ -208,16 +203,16 @@ def start():
     else:
         print('Command {} not recognized.'.format(command))
         sys.exit(1)
-
 try:
     apikey = os.environ["VULTRAPI"]
 except KeyError:
-    print('Must set VULTRAPI key enviroment variable.')
-    sys.exit(1)
+    apikey = "NONE"
 
 s = requests.Session()
-s.headers.update({'API-Key': apikey})
+if (apikey != "NONE"):
+    s.headers.update({'API-Key': apikey})
+else:
+    print('VULTRAPI environment variable not set. Some functions will not work and return error 403.')
 
 if __name__ == '__main__':
     start()
-
