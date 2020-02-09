@@ -159,6 +159,14 @@ def copy(target):
         firewall = existing['FIREWALLGROUPID']
         tags = existing['tag']
 
+def printoslist():
+    return
+
+def printfwlist():
+    return
+
+def printsshlist():
+    return
 
 def start():
     parser = create_parse()
@@ -181,6 +189,12 @@ def start():
             printallplans()
         if (target == 'active' or target == 'pending' or target == 'suspended' or target == 'closed'):
             printstatus(target)
+        if (target == 'os'):
+            printoslist()
+        if (target == 'ssh'):
+            printsshlist()
+        if (target == 'fw'):
+            printfwlist()
     elif (command == 'ls'):
         printstatus('ALL')
     elif (command == 'status'):
@@ -189,6 +203,8 @@ def start():
         kill(args.target)
     elif (command == 'create'):
         create(args.target)
+    elif (command == 'copy'):
+        copy(args.target)
     else:
         print('Command {} not recognized.'.format(command))
         sys.exit(1)
