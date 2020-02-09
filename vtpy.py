@@ -89,6 +89,15 @@ def regionlist():
         r.raise_for_status()
     return r.json()
 
+def printregionlist():
+    list = regionlist()
+    if list == []:
+        print('[None found]')
+    else:
+        for i in list:
+            print(list[i])
+    return
+
 def kill(target):
     list = serverlist()
     count = 0
@@ -160,13 +169,99 @@ def copy(target):
         tags = existing['tag']
 
 def printoslist():
+    list = oslist()
+    if list == []:
+        print('[None found]')
+    else:
+        for i in list:
+            print(list[i])
     return
+
+def oslist():
+    url = 'https://api.vultr.com/v1/os/list'
+    r = s.get(url)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url)
+        r.raise_for_status()
+    return r.json()
 
 def printfwlist():
+    list = fwlist()
+    if list == []:
+        print('[None found]')
+    else:
+        for i in list:
+            print(list[i])
     return
 
+def fwlist():
+    url = 'https://api.vultr.com/v1/firewall/group_list'
+    r = s.get(url)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url)
+        r.raise_for_status()
+    return r.json()
+
 def printsshlist():
+    list = sshlist()
+    if list == []:
+        print('[None found]')
+    else:
+        for i in list:
+            print(list[i])
     return
+
+def sshlist():
+    url = 'https://api.vultr.com/v1/sshkey/list'
+    r = s.get(url)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url)
+        r.raise_for_status()
+    return r.json()
+
+def printstartuplist():
+    list = startuplist()
+    if list == []:
+        print('[None found]')
+    else:
+        for i in list:
+            print(list[i])
+    return
+
+def startuplist():
+    url = 'https://api.vultr.com/v1/startupscript/list'
+    r = s.get(url)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url)
+        r.raise_for_status()
+    return r.json()
+
+def printbackuplist():
+    list = backuplist()
+    if list == []:
+        print('[None found]')
+    else:
+        for i in list:
+            print(list[i])
+    return
+
+def backuplist():
+    url = 'https://api.vultr.com/v1/backup/list'
+    r = s.get(url)
+    status = r.status_code
+    if (status != 200):
+        print(status)
+        print(url)
+        r.raise_for_status()
+    return r.json()
 
 def start():
     parser = create_parse()
@@ -190,6 +285,12 @@ def start():
             printsshlist()
         if (target == 'fw'):
             printfwlist()
+        if (target == 'startup'):
+            printstartuplist()
+        if (target == 'backup'):
+            printbackuplist()
+        if (target == 'locations'):
+            printregionlist()
     elif (command == 'ls'):
         printstatus('ALL')
     elif (command == 'status'):
