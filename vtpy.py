@@ -134,6 +134,20 @@ def getstatus(target):
             print(j, ': ', x[j])
         print()
 
+def printip(target):
+    for i in target:
+        url = 'https://api.vultr.com/v1/server/list'
+        payload = ({'SUBID': i})
+        r = s.get(url, params=payload)
+        status = r.status_code
+        if status != 200:
+            print(status)
+            print(url)
+            r.raise_for_status()
+        ip = r.json()["main_ip"]
+        print('{}:{}'.format(i,ip))
+
+
 def create(target):
     url = 'https://api.vultr.com/v1/server/create'
     datacenter = target[0]
@@ -286,6 +300,8 @@ def start():
             printbackuplist()
         if target == 'locations':
             printregionlist()
+    elif command == 'ip':
+        printip(args.target)
     elif command == 'ls':
         printstatus('ALL')
     elif command == 'status':
