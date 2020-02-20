@@ -20,3 +20,6 @@ Examples:
     vtpy status <SUBID> [<SUBID>] -- get detailed status for one or more server
     vtpy create <datacenter> <VPS plan> <OS ID> <Private Net?> <SSHKey ID> <Firewall ID> [hostname] [tag(s] -- create new server
     vtpy copy <SUBID> [new hostname] -- create new server by duplicating an existing server configuration
+
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
