@@ -190,14 +190,14 @@ def copy(target):
             print(status)
             print(url)
             r.raise_for_status()
-        existing = r.json()
-        datacenter = existing["DCID"]
-        vpsplan = existing["VPSPLANID"]
-        osid = existing["OSID"]
+#        existing = r.json()
+#        datacenter = existing["DCID"]
+ #       vpsplan = existing["VPSPLANID"]
+  #      osid = existing["OSID"]
         #        pvtnet =
         #        sshkey =
-        firewall = existing["FIREWALLGROUPID"]
-        tags = existing["tag"]
+ #       firewall = existing["FIREWALLGROUPID"]
+ #       tags = existing["tag"]
 
 
 def printoslist():
