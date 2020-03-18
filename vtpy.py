@@ -181,8 +181,8 @@ def create(target):
 
 
 def copy(target):
+    url = "https://api.vultr.com/v1/server/list" 
     for i in target:
-        url = "https://api.vultr.com/v1/server/list"
         payload = {"SUBID": i}
         r = s.get(url, params=payload)
         status = r.status_code
