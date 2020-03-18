@@ -159,7 +159,7 @@ def printip(target):
 
 
 def create(target):
-    url = "https://api.vultr.com/v1/server/create"
+  #  url = "https://api.vultr.com/v1/server/create"
     datacenter = target[0]
     vpsplan = target[1]
     osid = target[2]
