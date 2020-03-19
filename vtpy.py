@@ -159,7 +159,7 @@ def printip(target):
 
 
 def create(target):
-  #  url = "https://api.vultr.com/v1/server/create"
+    #  url = "https://api.vultr.com/v1/server/create"
     datacenter = target[0]
     vpsplan = target[1]
     osid = target[2]
@@ -181,7 +181,7 @@ def create(target):
 
 
 def copy(target):
-    url = "https://api.vultr.com/v1/server/list" 
+    url = "https://api.vultr.com/v1/server/list"
     for i in target:
         payload = {"SUBID": i}
         r = s.get(url, params=payload)
@@ -190,14 +190,16 @@ def copy(target):
             print(status)
             print(url)
             r.raise_for_status()
+
+
 #        existing = r.json()
 #        datacenter = existing["DCID"]
- #       vpsplan = existing["VPSPLANID"]
-  #      osid = existing["OSID"]
-        #        pvtnet =
-        #        sshkey =
- #       firewall = existing["FIREWALLGROUPID"]
- #       tags = existing["tag"]
+#       vpsplan = existing["VPSPLANID"]
+#      osid = existing["OSID"]
+#        pvtnet =
+#        sshkey =
+#       firewall = existing["FIREWALLGROUPID"]
+#       tags = existing["tag"]
 
 
 def printoslist():
